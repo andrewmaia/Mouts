@@ -15,11 +15,14 @@ public static class DependencyInjection
         services.AddDbContext<MoutsDbContext>(options =>
             options.UseNpgsql(
                 configuration.GetConnectionString("DefaultConnection"),
-                npgsql => npgsql.MapEnum<OrderStatus>("order_status")
+                npgsql =>
+                {
+                    npgsql.MapEnum<SaleStatus>("sale_status");
+                }
             )
         );
 
-        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<ISaleRepository, SaleRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;

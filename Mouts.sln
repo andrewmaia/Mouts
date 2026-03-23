@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36408.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalServices", "ExternalServices", "{7B028EB9-F673-421C-805B-27096EF55B08}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{B46D7C98-720F-4FA9-8582-F13DAF1806A7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2D52836F-AC02-4DE3-8BEA-0F0008ACA24A}"
@@ -13,11 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mouts.Api", "src\Mouts.Api\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mouts.Domain", "src\Mouts.Domain\Mouts.Domain.csproj", "{43EF6063-A85C-4F17-A950-FCFE244B7C7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mouts.Workers", "src\Mouts.Workers\Mouts.Workers.csproj", "{6C84861D-D6B0-496D-9CFB-EADBA491457E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mouts.CrossCutting.Utils", "src\Mouts.CrossCutting.Utils\Mouts.CrossCutting.Utils.csproj", "{7FEF4FC7-4262-4BF3-A93D-9C11FC955BE8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mouts.ExternalServices.ViaCEP", "src\Mouts.ExternalServices.ViaCEP\Mouts.ExternalServices.ViaCEP.csproj", "{D0B4D27E-9E6A-4C4F-810D-FCBCF870F521}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mouts.Infrastructure.PostgreSQL", "src\Mouts.Infrastructure.PostgreSQL\Mouts.Infrastructure.PostgreSQL.csproj", "{AFF0C5B5-D0E1-49FE-ADDC-EED43F240CC9}"
 EndProject
@@ -43,18 +37,10 @@ Global
 		{43EF6063-A85C-4F17-A950-FCFE244B7C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43EF6063-A85C-4F17-A950-FCFE244B7C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43EF6063-A85C-4F17-A950-FCFE244B7C7D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C84861D-D6B0-496D-9CFB-EADBA491457E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C84861D-D6B0-496D-9CFB-EADBA491457E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C84861D-D6B0-496D-9CFB-EADBA491457E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C84861D-D6B0-496D-9CFB-EADBA491457E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7FEF4FC7-4262-4BF3-A93D-9C11FC955BE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7FEF4FC7-4262-4BF3-A93D-9C11FC955BE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FEF4FC7-4262-4BF3-A93D-9C11FC955BE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FEF4FC7-4262-4BF3-A93D-9C11FC955BE8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D0B4D27E-9E6A-4C4F-810D-FCBCF870F521}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D0B4D27E-9E6A-4C4F-810D-FCBCF870F521}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D0B4D27E-9E6A-4C4F-810D-FCBCF870F521}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D0B4D27E-9E6A-4C4F-810D-FCBCF870F521}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AFF0C5B5-D0E1-49FE-ADDC-EED43F240CC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AFF0C5B5-D0E1-49FE-ADDC-EED43F240CC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFF0C5B5-D0E1-49FE-ADDC-EED43F240CC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -80,7 +66,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{D0B4D27E-9E6A-4C4F-810D-FCBCF870F521} = {7B028EB9-F673-421C-805B-27096EF55B08}
 		{AFF0C5B5-D0E1-49FE-ADDC-EED43F240CC9} = {B46D7C98-720F-4FA9-8582-F13DAF1806A7}
 		{3343B723-E411-415E-820A-90F8348DC0CA} = {B46D7C98-720F-4FA9-8582-F13DAF1806A7}
 		{904E6D33-F10E-476C-A671-36F74E0A1BBB} = {2D52836F-AC02-4DE3-8BEA-0F0008ACA24A}

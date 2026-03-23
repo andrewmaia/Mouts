@@ -30,10 +30,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Mouts.Application\Mouts.Application.csproj" />
     <ProjectReference Include="..\Mouts.CrossCutting.Utils\Mouts.CrossCutting.Utils.csproj" />
-    <ProjectReference Include="..\Mouts.ExternalServices.ViaCEP\Mouts.ExternalServices.ViaCEP.csproj" />
     <ProjectReference Include="..\Mouts.Infrastructure.PostgreSQL\Mouts.Infrastructure.PostgreSQL.csproj" />
     <ProjectReference Include="..\Mouts.Infrastructure.Services\Mouts.Infrastructure.Services.csproj" />
-    <ProjectReference Include="..\Mouts.Workers\Mouts.Workers.csproj" />
   </ItemGroup>
 
 </Project>

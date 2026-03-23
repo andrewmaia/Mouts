@@ -15,10 +15,10 @@ public class MoutsDbContext:DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(
             typeof(MoutsDbContext).Assembly);
 
-        modelBuilder.HasPostgresEnum<OrderStatus>();
+        modelBuilder.HasPostgresEnum<SaleStatus>();
 
         base.OnModelCreating(modelBuilder);
     }
 
-    public DbSet<Order> Orders { get; set; }
+    public DbSet<Sale> Sales { get; set; }
 }

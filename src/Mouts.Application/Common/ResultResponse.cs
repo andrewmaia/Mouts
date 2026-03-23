@@ -17,5 +17,5 @@ public enum BusinessError
     None,
     NotFound,
     ValidationFailed,
-    AlreadyPaid
+    Conflict
 }
