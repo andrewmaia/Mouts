@@ -1,0 +1,176 @@
+{
+  "info": {
+    "_postman_id": "0dd8547a-a59c-4efd-b859-65b0f867f80d",
+    "name": "Mouts SalesController",
+    "description": "Collection Postman para testar todos os endpoints do SalesController em https://localhost:7214/api/sales.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://localhost:7214"
+    },
+    {
+      "key": "sale_id",
+      "value": "11111111-1111-1111-1111-111111111111"
+    },
+    {
+      "key": "item_id",
+      "value": "22222222-2222-2222-2222-222222222222"
+    },
+    {
+      "key": "customer_id",
+      "value": "33333333-3333-3333-3333-333333333333"
+    },
+    {
+      "key": "branch_id",
+      "value": "44444444-4444-4444-4444-444444444444"
+    },
+    {
+      "key": "product_id_1",
+      "value": "55555555-5555-5555-5555-555555555555"
+    },
+    {
+      "key": "product_id_2",
+      "value": "66666666-6666-6666-6666-666666666666"
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Sale",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "const data = json.data || {};",
+              "const saleId = data.saleId || data.SaleId || (data.sale && data.sale.id) || (data.Sale && data.Sale.Id);",
+              "const sale = data.sale || data.Sale;",
+              "const firstItem = sale && sale.items ? sale.items[0] : sale && sale.Items ? sale.Items[0] : null;",
+              "const itemId = firstItem ? (firstItem.id || firstItem.Id) : null;",
+              "",
+              "if (saleId) {",
+              "  pm.collectionVariables.set('sale_id', saleId);",
+              "}",
+              "",
+              "if (itemId) {",
+              "  pm.collectionVariables.set('item_id', itemId);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"saleNumber\": \"SALE-1001\",\n  \"saleDate\": \"2026-03-24T10:00:00Z\",\n  \"customerId\": \"{{customer_id}}\",\n  \"customerName\": \"Cliente Exemplo\",\n  \"branchId\": \"{{branch_id}}\",\n  \"branchName\": \"Filial Centro\",\n  \"items\": [\n    {\n      \"productId\": \"{{product_id_1}}\",\n      \"productName\": \"Produto A\",\n      \"quantity\": 2,\n      \"unitPrice\": 100.00\n    },\n    {\n      \"productId\": \"{{product_id_2}}\",\n      \"productName\": \"Produto B\",\n      \"quantity\": 4,\n      \"unitPrice\": 25.50\n    }\n  ]\n}"
+        },
+        "url": "{{base_url}}/api/sales",
+        "description": "Cria uma nova venda. O script salva `sale_id` e `item_id` a partir da resposta."
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Sales",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/sales?_page=1&_size=10&_order=saleDate_desc&saleNumber=SALE-1001&customerName=Cliente Exemplo&branchName=Filial Centro&status=1&saleDate_min=2026-03-01T00:00:00Z&saleDate_max=2026-03-31T23:59:59Z&totalAmount_min=10&totalAmount_max=1000",
+        "description": "Lista vendas com paginação, ordenação e filtros. Ajuste ou remova query params conforme necessário."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Sale By Id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "const data = json.data || {};",
+              "const sale = data.sale || data.Sale;",
+              "const saleId = sale ? (sale.id || sale.Id) : null;",
+              "const firstItem = sale && sale.items ? sale.items[0] : sale && sale.Items ? sale.Items[0] : null;",
+              "const itemId = firstItem ? (firstItem.id || firstItem.Id) : null;",
+              "",
+              "if (saleId) {",
+              "  pm.collectionVariables.set('sale_id', saleId);",
+              "}",
+              "",
+              "if (itemId) {",
+              "  pm.collectionVariables.set('item_id', itemId);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/sales/{{sale_id}}",
+        "description": "Busca uma venda pelo ID. O script atualiza `sale_id` e `item_id` com base no retorno."
+      },
+      "response": []
+    },
+    {
+      "name": "Update Sale",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"saleNumber\": \"SALE-1001-UPDATED\",\n  \"saleDate\": \"2026-03-24T15:30:00Z\",\n  \"customerId\": \"{{customer_id}}\",\n  \"customerName\": \"Cliente Exemplo Atualizado\",\n  \"branchId\": \"{{branch_id}}\",\n  \"branchName\": \"Filial Centro\",\n  \"items\": [\n    {\n      \"productId\": \"{{product_id_1}}\",\n      \"productName\": \"Produto A\",\n      \"quantity\": 3,\n      \"unitPrice\": 100.00\n    },\n    {\n      \"productId\": \"{{product_id_2}}\",\n      \"productName\": \"Produto B\",\n      \"quantity\": 2,\n      \"unitPrice\": 25.50\n    }\n  ]\n}"
+        },
+        "url": "{{base_url}}/api/sales/{{sale_id}}",
+        "description": "Atualiza os dados da venda informada em `sale_id`."
+      },
+      "response": []
+    },
+    {
+      "name": "Cancel Sale",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{base_url}}/api/sales/{{sale_id}}/cancel",
+        "description": "Cancela a venda por rota dedicada."
+      },
+      "response": []
+    },
+    {
+      "name": "Cancel Sale Item",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{base_url}}/api/sales/{{sale_id}}/items/{{item_id}}/cancel",
+        "description": "Cancela um item específico da venda."
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Sale",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{base_url}}/api/sales/{{sale_id}}",
+        "description": "Executa o cancelamento da venda via DELETE."
+      },
+      "response": []
+    }
+  ]
+}

@@ -45,6 +45,7 @@ internal class SaleMap : IEntityTypeConfiguration<Sale>
             itemBuilder.ToTable("SaleItem");
             itemBuilder.WithOwner().HasForeignKey("SaleId");
             itemBuilder.HasKey(x => x.Id);
+            itemBuilder.Property(x => x.Id).ValueGeneratedNever();
 
             itemBuilder.Property<Guid>("SaleId");
 

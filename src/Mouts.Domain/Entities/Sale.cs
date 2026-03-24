@@ -51,7 +51,7 @@ public class Sale : AggregateRoot
     {
         EnsureActive();
         SetHeader(saleNumber, saleDate, customerId, customerName, branchId, branchName);
-        ReplaceItems(items);
+        SyncItems(items);
         AddDomainEvent(new SaleModifiedDomainEvent(Id));
     }
 
@@ -92,6 +92,40 @@ public class Sale : AggregateRoot
 
         _items.Clear();
         _items.AddRange(materializedItems);
+        RecalculateTotal();
+    }
+
+    private void SyncItems(IEnumerable<SaleItem> items)
+    {
+        var materializedItems = items?.ToList() ?? [];
+
+        if (materializedItems.Count == 0)
+            throw new SaleDomainException("A sale must contain at least one item.");
+
+        var duplicatedProducts = materializedItems
+            .GroupBy(item => item.ProductId)
+            .Where(group => group.Count() > 1)
+            .Select(group => group.Key)
+            .ToList();
+
+        if (duplicatedProducts.Count != 0)
+            throw new SaleDomainException("A sale cannot contain duplicate products.");
+
+        _items.RemoveAll(existingItem => materializedItems.All(newItem => newItem.ProductId != existingItem.ProductId));
+
+        foreach (var newItem in materializedItems)
+        {
+            var existingItem = _items.FirstOrDefault(item => item.ProductId == newItem.ProductId);
+
+            if (existingItem is null)
+            {
+                _items.Add(newItem);
+                continue;
+            }
+
+            existingItem.Update(newItem.ProductId, newItem.ProductName, newItem.Quantity, newItem.UnitPrice);
+        }
+
         RecalculateTotal();
     }
 

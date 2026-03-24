@@ -69,6 +69,70 @@ public class SaleTests
         Assert.All(sale.Items, item => Assert.True(item.IsCancelled));
     }
 
+    [Fact]
+    public void Update_ShouldModifyExistingItem_WhenProductRemainsTheSame()
+    {
+        var customerId = Guid.NewGuid();
+        var branchId = Guid.NewGuid();
+        var productA = Guid.NewGuid();
+        var productB = Guid.NewGuid();
+
+        var sale = new Sale(
+            "S-010",
+            DateTime.UtcNow,
+            customerId,
+            "Customer",
+            branchId,
+            "Branch",
+            [
+                new SaleItem(productA, "Product A", 2, 10m),
+                new SaleItem(productB, "Product B", 1, 20m)
+            ]);
+
+        var originalItemId = sale.Items.Single(x => x.ProductId == productA).Id;
+
+        sale.Update(
+            "S-010-UPDATED",
+            DateTime.UtcNow,
+            customerId,
+            "Customer Updated",
+            branchId,
+            "Branch",
+            [
+                new SaleItem(productA, "Product A", 4, 10m),
+                new SaleItem(productB, "Product B", 1, 20m)
+            ]);
+
+        var updatedItem = sale.Items.Single(x => x.ProductId == productA);
+
+        Assert.Equal(originalItemId, updatedItem.Id);
+        Assert.Equal(4, updatedItem.Quantity);
+        Assert.Equal(4m, updatedItem.Discount);
+        Assert.Equal(56m, sale.TotalAmount);
+    }
+
+    [Fact]
+    public void Update_ShouldThrow_WhenPayloadContainsDuplicateProducts()
+    {
+        var productId = Guid.NewGuid();
+        var sale = CreateSaleWithTwoItems();
+
+        var exception = Assert.Throws<SaleDomainException>(() =>
+            sale.Update(
+                "S-011",
+                DateTime.UtcNow,
+                Guid.NewGuid(),
+                "Customer",
+                Guid.NewGuid(),
+                "Branch",
+                [
+                    new SaleItem(productId, "Product A", 1, 10m),
+                    new SaleItem(productId, "Product A Duplicate", 2, 10m)
+                ]));
+
+        Assert.Equal("A sale cannot contain duplicate products.", exception.Message);
+    }
+
     private static Sale CreateSale(int quantity, decimal unitPrice)
     {
         return new Sale(
