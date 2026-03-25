@@ -1,3 +1,4 @@
+using AutoMapper;
 using Mouts.Application.Common;
 using Mouts.Application.Repositories;
 using Mouts.Application.UseCases.Common;
@@ -7,10 +8,12 @@ namespace Mouts.Application.UseCases.GetSaleById;
 public class GetSaleByIdUseCase : SaleUseCaseBase, IUseCase<GetSaleByIdRequest, GetSaleByIdResponse>
 {
     private readonly ISaleRepository _saleRepository;
+    private readonly IMapper _mapper;
 
-    public GetSaleByIdUseCase(ISaleRepository saleRepository)
+    public GetSaleByIdUseCase(ISaleRepository saleRepository, IMapper mapper)
     {
         _saleRepository = saleRepository;
+        _mapper = mapper;
     }
 
     public async Task<GetSaleByIdResponse> ExecuteAsync(GetSaleByIdRequest request)
@@ -22,7 +25,7 @@ public class GetSaleByIdUseCase : SaleUseCaseBase, IUseCase<GetSaleByIdRequest, 
 
         return new GetSaleByIdResponse
         {
-            Sale = SaleOutputMapper.Map(sale)
+            Sale = _mapper.Map<SaleOutput>(sale)
         };
     }
 }

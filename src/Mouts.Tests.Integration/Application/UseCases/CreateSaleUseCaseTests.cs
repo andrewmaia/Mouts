@@ -1,9 +1,11 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Mouts.Application.Common.Events;
+using Mouts.Application.Mapping;
+using Mouts.Application.UseCases.Common;
 using Mouts.Application.UseCases.CreateSale;
 using Mouts.Application.UseCases.GetSaleById;
-using Mouts.Application.UseCases.Common;
 using Mouts.Infrastructure.PostgreSQL.Context;
 using Mouts.Infrastructure.PostgreSQL.Repositories;
 using Mouts.Tests.Integration.Application.Fixtures;
@@ -23,10 +25,12 @@ public class CreateSaleUseCaseTests
 
         var saleRepository = new SaleRepository(context);
         var unitOfWork = new UnitOfWorkInMemory(context);
-        var dispatcher = new DomainEventsDispatcher(BuildServiceProvider());
+        var serviceProvider = BuildServiceProvider();
+        var dispatcher = new DomainEventsDispatcher(serviceProvider);
+        var mapper = serviceProvider.GetRequiredService<IMapper>();
 
-        var createUseCase = new CreateSaleUseCase(saleRepository, unitOfWork, dispatcher);
-        var getByIdUseCase = new GetSaleByIdUseCase(saleRepository);
+        var createUseCase = new CreateSaleUseCase(saleRepository, unitOfWork, dispatcher, mapper);
+        var getByIdUseCase = new GetSaleByIdUseCase(saleRepository, mapper);
 
         var createResponse = await createUseCase.ExecuteAsync(new CreateSaleRequest
         {
@@ -65,6 +69,8 @@ public class CreateSaleUseCaseTests
 
     private static IServiceProvider BuildServiceProvider()
     {
-        return new ServiceCollection().BuildServiceProvider();
+        return new ServiceCollection()
+            .AddAutoMapper(typeof(SaleMappingProfile).Assembly)
+            .BuildServiceProvider();
     }
 }

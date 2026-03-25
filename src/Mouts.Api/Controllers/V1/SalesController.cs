@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Mouts.Api.Contracts;
 using Mouts.Api.Contracts.Sales;
@@ -6,7 +7,6 @@ using Mouts.Application.Common;
 using Mouts.Application.Execution;
 using Mouts.Application.UseCases.CancelSale;
 using Mouts.Application.UseCases.CancelSaleItem;
-using Mouts.Application.UseCases.Common;
 using Mouts.Application.UseCases.CreateSale;
 using Mouts.Application.UseCases.GetSaleById;
 using Mouts.Application.UseCases.GetSales;
@@ -21,10 +21,12 @@ namespace Mouts.Api.Controllers.V1;
 public class SalesController : ControllerBase
 {
     private readonly RequestExecutor _executor;
+    private readonly IMapper _mapper;
 
-    public SalesController(RequestExecutor executor)
+    public SalesController(RequestExecutor executor, IMapper mapper)
     {
         _executor = executor;
+        _mapper = mapper;
     }
 
     [HttpPost]
@@ -32,16 +34,7 @@ public class SalesController : ControllerBase
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid data", typeof(ApiResponse))]
     public async Task<IActionResult> Create([FromBody] CreateSaleApiRequest apiRequest)
     {
-        var request = new CreateSaleRequest
-        {
-            SaleNumber = apiRequest.SaleNumber,
-            SaleDate = apiRequest.SaleDate,
-            CustomerId = apiRequest.CustomerId,
-            CustomerName = apiRequest.CustomerName,
-            BranchId = apiRequest.BranchId,
-            BranchName = apiRequest.BranchName,
-            Items = MapItems(apiRequest.Items)
-        };
+        var request = _mapper.Map<CreateSaleRequest>(apiRequest);
 
         var result = await _executor.ExecuteAsync<CreateSaleRequest, CreateSaleResponse>(request);
 
@@ -110,17 +103,8 @@ public class SalesController : ControllerBase
     [SwaggerResponse(StatusCodes.Status404NotFound, "Sale not found", typeof(ApiResponse))]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateSaleApiRequest apiRequest)
     {
-        var request = new UpdateSaleRequest
-        {
-            SaleId = id,
-            SaleNumber = apiRequest.SaleNumber,
-            SaleDate = apiRequest.SaleDate,
-            CustomerId = apiRequest.CustomerId,
-            CustomerName = apiRequest.CustomerName,
-            BranchId = apiRequest.BranchId,
-            BranchName = apiRequest.BranchName,
-            Items = MapItems(apiRequest.Items)
-        };
+        var request = _mapper.Map<UpdateSaleRequest>(apiRequest);
+        request.SaleId = id;
 
         var result = await _executor.ExecuteAsync<UpdateSaleRequest, UpdateSaleResponse>(request);
 
@@ -184,16 +168,5 @@ public class SalesController : ControllerBase
             BusinessError.Conflict => Conflict(result.ToApiResponse()),
             _ => BadRequest(result.ToApiResponse())
         };
-    }
-
-    private static IReadOnlyCollection<SaleItemInput> MapItems(IEnumerable<SaleItemApiRequest> items)
-    {
-        return (items ?? []).Select(item => new SaleItemInput
-        {
-            ProductId = item.ProductId,
-            ProductName = item.ProductName,
-            Quantity = item.Quantity,
-            UnitPrice = item.UnitPrice
-        }).ToList();
     }
 }

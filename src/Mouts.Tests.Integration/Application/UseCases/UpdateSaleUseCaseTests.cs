@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Mouts.Application.Common.Events;
+using Mouts.Application.Mapping;
 using Mouts.Application.UseCases.Common;
 using Mouts.Application.UseCases.CreateSale;
 using Mouts.Application.UseCases.GetSaleById;
@@ -24,11 +26,13 @@ public class UpdateSaleUseCaseTests
 
         var saleRepository = new SaleRepository(context);
         var unitOfWork = new UnitOfWorkInMemory(context);
-        var dispatcher = new DomainEventsDispatcher(BuildServiceProvider());
+        var serviceProvider = BuildServiceProvider();
+        var dispatcher = new DomainEventsDispatcher(serviceProvider);
+        var mapper = serviceProvider.GetRequiredService<IMapper>();
 
-        var createUseCase = new CreateSaleUseCase(saleRepository, unitOfWork, dispatcher);
-        var updateUseCase = new UpdateSaleUseCase(saleRepository, unitOfWork, dispatcher);
-        var getByIdUseCase = new GetSaleByIdUseCase(saleRepository);
+        var createUseCase = new CreateSaleUseCase(saleRepository, unitOfWork, dispatcher, mapper);
+        var updateUseCase = new UpdateSaleUseCase(saleRepository, unitOfWork, dispatcher, mapper);
+        var getByIdUseCase = new GetSaleByIdUseCase(saleRepository, mapper);
 
         var customerId = Guid.NewGuid();
         var branchId = Guid.NewGuid();
@@ -114,6 +118,8 @@ public class UpdateSaleUseCaseTests
 
     private static IServiceProvider BuildServiceProvider()
     {
-        return new ServiceCollection().BuildServiceProvider();
+        return new ServiceCollection()
+            .AddAutoMapper(typeof(SaleMappingProfile).Assembly)
+            .BuildServiceProvider();
     }
 }

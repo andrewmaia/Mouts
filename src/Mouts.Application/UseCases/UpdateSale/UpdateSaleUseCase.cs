@@ -1,3 +1,4 @@
+using AutoMapper;
 using Mouts.Application.Common;
 using Mouts.Application.Common.Events;
 using Mouts.Application.Interfaces;
@@ -12,12 +13,14 @@ public class UpdateSaleUseCase : SaleUseCaseBase, IUseCase<UpdateSaleRequest, Up
     private readonly ISaleRepository _saleRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly DomainEventsDispatcher _domainEventsDispatcher;
+    private readonly IMapper _mapper;
 
-    public UpdateSaleUseCase(ISaleRepository saleRepository, IUnitOfWork unitOfWork, DomainEventsDispatcher domainEventsDispatcher)
+    public UpdateSaleUseCase(ISaleRepository saleRepository, IUnitOfWork unitOfWork, DomainEventsDispatcher domainEventsDispatcher, IMapper mapper)
     {
         _saleRepository = saleRepository;
         _unitOfWork = unitOfWork;
         _domainEventsDispatcher = domainEventsDispatcher;
+        _mapper = mapper;
     }
 
     public async Task<UpdateSaleResponse> ExecuteAsync(UpdateSaleRequest request)
@@ -45,7 +48,7 @@ public class UpdateSaleUseCase : SaleUseCaseBase, IUseCase<UpdateSaleRequest, Up
             return new UpdateSaleResponse
             {
                 SaleId = sale.Id,
-                Sale = SaleOutputMapper.Map(sale)
+                Sale = _mapper.Map<SaleOutput>(sale)
             };
         }
         catch (SaleDomainException ex)
