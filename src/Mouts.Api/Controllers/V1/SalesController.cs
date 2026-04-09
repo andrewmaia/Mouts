@@ -41,7 +41,7 @@ public class SalesController : ControllerBase
         if (!result.IsSuccess)
             return HandleError(result);
 
-        return CreatedAtAction(nameof(GetById), new { id = result.SaleId }, result.ToApiResponse());
+        return Ok(result.ToApiResponse());
     }
 
     [HttpGet]
@@ -62,8 +62,8 @@ public class SalesController : ControllerBase
     {
         var request = new GetSalesRequest
         {
-            Page = page,
-            Size = size,
+            Page = 0,
+            Size = 10000,
             Order = order,
             SaleNumber = saleNumber,
             CustomerName = customerName,
@@ -122,9 +122,6 @@ public class SalesController : ControllerBase
         var result = await _executor.ExecuteAsync<CancelSaleRequest, CancelSaleResponse>(
             new CancelSaleRequest { SaleId = id });
 
-        if (!result.IsSuccess)
-            return HandleError(result);
-
         return Ok(result.ToApiResponse());
     }
 
@@ -150,8 +147,8 @@ public class SalesController : ControllerBase
         var result = await _executor.ExecuteAsync<CancelSaleItemRequest, CancelSaleItemResponse>(
             new CancelSaleItemRequest
             {
-                SaleId = id,
-                ItemId = itemId
+                SaleId = itemId,
+                ItemId = id
             });
 
         if (!result.IsSuccess)
